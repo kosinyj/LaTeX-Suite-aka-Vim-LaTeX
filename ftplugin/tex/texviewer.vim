@@ -57,7 +57,8 @@ function! Tex_Complete(what, where)
 	if a:where == "text"
 		" What to do after <F9> depending on context
 		let s:curfile = expand("%:p")
-		let s:curline = strpart(getline('.'), col('.') - 40, 40)
+		" HK: add more space for multiref conpletion
+		let s:curline = strpart(getline('.'), col('.') - 1000, 1000)
 		let s:prefix = matchstr(s:curline, '.*{\zs.\{-}$')
 		" a command is of the type
 		" \psfig[option=value]{figure=}
@@ -172,9 +173,16 @@ endfunction " }}}
 function! Tex_CompleteWord(completeword)
 	exe s:pos
 
-	" Complete word, check if add closing }
+	" HK: check if add comma for separation
+	"     for multi cite reference insertion
+	if getline('.')[col('.')-1] =~ '\w'
+		exe "normal! a,\<Esc>"
+	endif
+
+	" Complete word
 	exe 'normal! a'.a:completeword."\<Esc>"
 
+	" check if to add closing }
 	if getline('.')[col('.')-1] !~ '{' && getline('.')[col('.')] !~ '}'
 		exe "normal! a}\<Esc>"
 	endif
