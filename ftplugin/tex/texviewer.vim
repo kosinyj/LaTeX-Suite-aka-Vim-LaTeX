@@ -173,12 +173,6 @@ endfunction " }}}
 function! Tex_CompleteWord(completeword)
 	exe s:pos
 
-	" HK: check if add comma for separation
-	"     for multi cite reference insertion
-	if getline('.')[col('.')-1] =~ '\w'
-		exe "normal! a,\<Esc>"
-	endif
-
 	" Complete word
 	exe 'normal! a'.a:completeword."\<Esc>"
 
